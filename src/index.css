@@ -1,0 +1,355 @@
+:root {
+  --font-family: "Sora", sans-serif;
+
+  --neutral-900: hsl(0, 0%, 7%);
+  --neutral-800: hsl(0, 0%, 15%);
+  --neutral-500: hsl(240, 3%, 46%);
+  --neutral-400: hsl(240, 1%, 59%);
+  --neutral-0: hsl(0, 0%, 100%);
+
+  --blue-600: hsl(214, 100%, 55%);
+  --blue-400: hsl(210, 100%, 65%);
+
+  --red-500: hsl(354, 63%, 57%);
+
+  --green-500: hsl(140, 63%, 57%);
+
+  --yellow-500: hsl(49, 85%, 70%);
+
+  --button-radius: 9px;
+  --button-border: 0.5px solid var(--neutral-0);
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("./assets/fonts/Sora/static/Sora-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("./assets/fonts/Sora/static/Sora-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("./assets/fonts/Sora/static/Sora-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--neutral-900);
+  color: var(--neutral-400);
+  font-family: "Sora", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.desktop-block {
+  display: none;
+}
+
+/* Header section */
+#header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  height: auto;
+}
+
+#app-title,
+#app-subtitle {
+  display: none;
+}
+
+#trophy {
+  display: none;
+}
+
+#best-label-full {
+  display: none;
+}
+
+#best-wpm {
+  color: var(--neutral-0);
+}
+
+.vertical-line {
+  border-left: 1px solid;
+  /* height: 10px; */
+}
+
+hr {
+  height: 1px;
+  border-width: 0px;
+  background-color: var(--neutral-400);
+  width: 100%;
+}
+
+#stats-and-settings {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Statistics section: WPM, Accuracy, Time */
+#statistics {
+  display: flex;
+  justify-content: center;
+}
+
+.statistics-element {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 6vw;
+}
+
+.stats-settings-label {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+#current-wpm {
+  color: var(--neutral-0);
+  font-size: x-large;
+}
+
+#accuracy {
+  color: var(--red-500);
+  font-size: x-large;
+}
+
+#time {
+  color: var(--yellow-500);
+  font-size: x-large;
+}
+
+/* Settings section: Difficulty, Mode */
+#desktop-difficulty-buttons,
+#desktop-mode-buttons {
+  display: none;
+}
+
+#settings {
+  display: flex;
+  gap: 1rem;
+}
+
+.settings-element {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+#mobile-difficulty-select,
+#mobile-mode-select {
+  width: 100%;
+  height: 2rem;
+  text-align: center;
+}
+
+/* Passage section */
+.blur {
+  filter: blur(4px);
+}
+
+.correct {
+  color: var(--green-500);
+}
+
+.incorrect {
+  color: var(--red-500);
+}
+
+#passage-container {
+  height: 55vh;
+  font-size: x-large;
+}
+#passage-container:focus {
+  outline: none; /* Removes the blue border */
+}
+
+#start-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--neutral-0);
+}
+
+#start-button {
+  padding: 1rem 2rem; /* Vertical | Horizontal */
+  margin: 0.5rem;
+  font-size: 1rem; /* Scales with user preferences */
+  border-radius: var(--button-radius);
+  border: var(--button-border);
+  border-color: var(--blue-600);
+  background-color: var(--blue-600);
+  color: var(--neutral-0);
+  font-family: var(--font-family);
+}
+
+#start-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px var(--blue-400);
+}
+
+#restart-button {
+  display: flex;
+  justify-content: center;
+  height: 6vh;
+  width: 45vw;
+  margin-top: 2vh;
+  border: 2px;
+  border-radius: var(--button-radius);
+  color: var(--neutral-0);
+  background-color: var(--neutral-800);
+  font-family: inherit;
+  font-size: medium;
+}
+
+#restart-icon {
+  padding-left: 3vw;
+}
+
+/* Desktop enhancements - applies at 768px and wider */
+@media (min-width: 768px) {
+  /* Override mobile styles here for desktop */
+
+  #root {
+    padding: 0 2.5rem; /* More padding on desktop */
+  }
+
+  #desktop-block {
+    display: block;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  #header {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  #app-title,
+  #app-subtitle {
+    display: block;
+    margin: 0;
+  }
+
+  #app-title {
+    color: var(--neutral-0);
+  }
+
+  #app-subtitle {
+    font-size: small;
+  }
+
+  #app-branding {
+    display: flex;
+    align-items: center; /* Vertically center logo with text */
+    gap: 1rem; /* Space between logo and text */
+  }
+
+  #trophy {
+    display: block;
+    margin-right: 1vw;
+  }
+
+  #record-section {
+    display: flex;
+  }
+
+  #best-label-full {
+    display: inline;
+  }
+
+  #best-label-short {
+    display: none;
+  }
+
+  /* Statistics and Settings */
+  /* WPM, Accuracy, Time, --- , Difficulty, Mode */
+  #stats-and-settings {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  #statistics {
+    gap: 2rem;
+  }
+
+  #settings {
+    gap: 2rem;
+  }
+
+  .statistics-element {
+    padding: 0;
+  }
+
+  .statistics-element {
+    flex-direction: row; /* Side-by-side instead of column */
+    gap: 0.5rem; /* Space between label and value */
+  }
+
+  .settings-element {
+    padding: 0;
+  }
+
+  #mobile-difficulty-select,
+  #mobile-mode-select {
+    display: none;
+  }
+
+  #desktop-difficulty-buttons,
+  #desktop-mode-buttons {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .difficulty-button,
+  .mode-button {
+    background-color: var(--neutral-900);
+    color: var(--neutral-0);
+    /* border: 0.5px solid var(--neutral-0); */
+    border: var(--button-border);
+    border-radius: var(--button-radius);
+    padding: 5px;
+  }
+
+  .difficulty-button:hover,
+  .mode-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 2px var(--neutral-400);
+  }
+
+  /* Active/selected state */
+  .difficulty-button.active,
+  .mode-button.active {
+    color: var(--blue-600); /* white text */
+    border-color: var(--blue-600);
+  }
+
+  /* Add more desktop overrides... */
+}
