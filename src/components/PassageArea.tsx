@@ -1,7 +1,17 @@
 import { useRef, useState } from "react";
 import type { CharacterState, Passage } from "../types";
 
-export default function PassageArea({ passage }: { passage: Passage | null }) {
+export default function PassageArea({
+  passage,
+  startTime,
+  stopTime,
+  isExpired,
+}: {
+  passage: Passage | null;
+  startTime: () => void;
+  stopTime: () => void;
+  isExpired: boolean;
+}) {
   const [isStartVisible, setIsStartVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [passageArray, setPassageArray] = useState<CharacterState[]>(() => {
@@ -22,15 +32,25 @@ export default function PassageArea({ passage }: { passage: Passage | null }) {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    // console.log("Pressed Key: ", event.key);
-    // console.log("Expected Key: ", passageArray[currentIndex]);
-    if (event.key.length > 1) return;
+    if (event.key.length > 1) return; // skip special chars (eg "Shift")
+    if (currentIndex >= passageArray.length) return; // passage terminated
+    if (isExpired)
+      return; // time is over
+    else startTime();
+
+    const nextIndex = currentIndex + 1;
 
     const newCharacters = [...passageArray]; // Create a copy
     newCharacters[currentIndex].status =
       event.key === passageArray[currentIndex].char ? "correct" : "incorrect";
     setPassageArray(newCharacters);
-    setCurrentIndex(currentIndex + 1);
+    setCurrentIndex(nextIndex);
+
+    // passage terminated
+    if (nextIndex >= passageArray.length) {
+      stopTime();
+      alert("Finish!!");
+    }
   }
 
   return (

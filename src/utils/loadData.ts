@@ -2,7 +2,6 @@ import type { PassageObj, Difficulty } from "../types";
 
 export async function loadPassages() {
   try {
-    console.log("Fetch passages from file");
     const response = await fetch("data.json");
     const passages = (await response.json()) as PassageObj;
 

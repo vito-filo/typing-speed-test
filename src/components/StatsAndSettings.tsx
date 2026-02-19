@@ -5,6 +5,7 @@ type StatsAndSettingsProps = {
   setDifficulty: (event: StatsAndSettingsEvent) => void;
   mode: Mode;
   setMode?: (event: StatsAndSettingsEvent) => void;
+  printTime: () => string;
 };
 
 export default function StatsAndSettings({
@@ -12,6 +13,7 @@ export default function StatsAndSettings({
   setDifficulty,
   mode,
   setMode,
+  printTime,
 }: StatsAndSettingsProps) {
   return (
     <>
@@ -36,7 +38,7 @@ export default function StatsAndSettings({
           <div className="statistics-element">
             {/* Time */}
             <p className="stats-settings-label">Time:</p>
-            <span id="time"> 0:00 </span>
+            <span id="time"> {printTime()} </span>
           </div>
         </div>
 

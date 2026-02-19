@@ -12,17 +12,21 @@ import type {
   StatsAndSettingsEvent,
 } from "./types";
 import { loadPassages, getRandomPassage } from "./utils/loadData";
+import { useStopwatch, useCountdown } from "./hooks/useTimer";
 
 function App() {
   const [passageObj, setPassageObj] = useState<PassageObj | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [mode, setMode] = useState<Mode>("passage");
+  const stopwatch = useStopwatch();
+  const countdown = useCountdown();
+
+  const timer = mode === "passage" ? stopwatch : countdown;
 
   useEffect(() => {
     loadPassages()
       .then((data: PassageObj | null) => {
         setPassageObj(data);
-        console.log("Fetched: ", data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -30,31 +34,19 @@ function App() {
   function setDifficultyCustom(event: StatsAndSettingsEvent) {
     const newDifficulty = event.currentTarget.value as Difficulty;
     setDifficulty(newDifficulty);
+    timer.stopTime();
   }
 
   function setModeCustom(event: StatsAndSettingsEvent) {
     const mode = event.currentTarget.value as Mode;
     setMode(mode);
+    timer.stopTime();
   }
 
   const passage = useMemo(() => {
     if (!passageObj) return null;
     return getRandomPassage(passageObj, difficulty);
   }, [passageObj, difficulty]);
-
-  // const PassageArray = useMemo(() => {
-  //   if (passage) {
-  //     const chars = passage.text.split("").map((char) => ({
-  //       char,
-  //       status: "untyped" as const,
-  //     }));
-  //     return chars;
-  //   }
-  //   return [];
-  // }, [passage]);
-
-  console.log("Passage: ", passage);
-  // console.log("PassageArray: ", PassageArray);
 
   return (
     <>
@@ -64,8 +56,15 @@ function App() {
         mode={mode}
         setDifficulty={setDifficultyCustom}
         setMode={setModeCustom}
+        printTime={timer.printTime}
       />
-      <PassageArea key={passage?.id || "0"} passage={passage} />
+      <PassageArea
+        key={passage?.id || "0"}
+        passage={passage}
+        startTime={timer.startTime}
+        stopTime={timer.stopTime}
+        isExpired={timer.isExpired}
+      />
       <RestartButton />
     </>
   );
