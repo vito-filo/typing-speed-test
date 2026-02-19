@@ -215,8 +215,9 @@ hr {
 #restart-button {
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 6vh;
-  width: 45vw;
+  width: 45%;
   margin-top: 2vh;
   border: 2px;
   border-radius: var(--button-radius);
@@ -227,11 +228,11 @@ hr {
 }
 
 #restart-icon {
-  padding-left: 3vw;
+  padding-left: 1vw;
 }
 
 /* Desktop enhancements - applies at 768px and wider */
-@media (min-width: 768px) {
+@media (min-width: 860px) {
   /* Override mobile styles here for desktop */
 
   #root {
@@ -336,6 +337,7 @@ hr {
     border: var(--button-border);
     border-radius: var(--button-radius);
     padding: 5px;
+    white-space: nowrap;
   }
 
   .difficulty-button:hover,
@@ -351,5 +353,7 @@ hr {
     border-color: var(--blue-600);
   }
 
-  /* Add more desktop overrides... */
+  #restart-button {
+    width: 20%;
+  }
 }
