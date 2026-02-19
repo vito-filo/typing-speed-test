@@ -15,7 +15,11 @@ export async function loadPassages() {
 export function getRandomPassage(
   passageObj: PassageObj,
   difficulty: Difficulty,
+  round = 0, // random seed, needed for trigger new passsage in parent parent component
 ) {
-  const randIndex = Math.floor(Math.random() * passageObj[difficulty].length);
+  const randIndex = Math.floor(
+    ((Math.random() + round) * passageObj[difficulty].length) %
+      passageObj[difficulty].length,
+  );
   return passageObj[difficulty][randIndex];
 }

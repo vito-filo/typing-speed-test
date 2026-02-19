@@ -18,6 +18,7 @@ function App() {
   const [passageObj, setPassageObj] = useState<PassageObj | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [mode, setMode] = useState<Mode>("passage");
+  const [round, setRound] = useState(0);
   const stopwatch = useStopwatch();
   const countdown = useCountdown();
 
@@ -31,22 +32,29 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
+  function restartGame() {
+    setRound((r) => r + 1);
+  }
+
   function setDifficultyCustom(event: StatsAndSettingsEvent) {
     const newDifficulty = event.currentTarget.value as Difficulty;
     setDifficulty(newDifficulty);
     timer.stopTime();
+    restartGame();
   }
 
   function setModeCustom(event: StatsAndSettingsEvent) {
     const mode = event.currentTarget.value as Mode;
     setMode(mode);
     timer.stopTime();
+    restartGame();
   }
 
   const passage = useMemo(() => {
     if (!passageObj) return null;
-    return getRandomPassage(passageObj, difficulty);
-  }, [passageObj, difficulty]);
+    const newPassage = getRandomPassage(passageObj, difficulty, round);
+    return newPassage;
+  }, [passageObj, difficulty, round]);
 
   return (
     <>
@@ -65,7 +73,7 @@ function App() {
         stopTime={timer.stopTime}
         isExpired={timer.isExpired}
       />
-      <RestartButton />
+      <RestartButton restartGame={restartGame} />
     </>
   );
 }
