@@ -6,11 +6,15 @@ export default function PassageArea({
   startTime,
   stopTime,
   isExpired,
+  calculateWPM,
+  calculateAccuracy,
 }: {
   passage: Passage | null;
   startTime: () => void;
   stopTime: () => void;
   isExpired: boolean;
+  calculateWPM: (index: number) => void;
+  calculateAccuracy: (correctChars: number, incorrectChars: number) => void;
 }) {
   const [isStartVisible, setIsStartVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,6 +28,7 @@ export default function PassageArea({
     }
     return [];
   });
+
   const passageContainerRef = useRef<HTMLDivElement>(null);
 
   function handleStart() {
@@ -41,14 +46,34 @@ export default function PassageArea({
     const nextIndex = currentIndex + 1;
 
     const newCharacters = [...passageArray]; // Create a copy
-    newCharacters[currentIndex].status =
-      event.key === passageArray[currentIndex].char ? "correct" : "incorrect";
+
+    if (event.key === passageArray[currentIndex].char) {
+      newCharacters[currentIndex].status = "correct";
+    } else {
+      newCharacters[currentIndex].status = "incorrect";
+    }
+
+    const correctChars = newCharacters.filter(
+      (char) => char.status === "correct",
+    ).length;
+    const incorrectChars = newCharacters.filter(
+      (char) => char.status === "incorrect",
+    ).length;
+
+    // calculate statistics after each typed word
+    if (nextIndex % 5 === 0) {
+      calculateWPM(nextIndex);
+      calculateAccuracy(correctChars, incorrectChars);
+    }
+
     setPassageArray(newCharacters);
     setCurrentIndex(nextIndex);
 
     // passage terminated
     if (nextIndex >= passageArray.length) {
       stopTime();
+      calculateWPM(nextIndex);
+      calculateAccuracy(correctChars, incorrectChars);
       alert("Finish!!");
     }
   }

@@ -6,6 +6,8 @@ type StatsAndSettingsProps = {
   mode: Mode;
   setMode?: (event: StatsAndSettingsEvent) => void;
   printTime: () => string;
+  wpm: number;
+  accuracy: number;
 };
 
 export default function StatsAndSettings({
@@ -14,6 +16,8 @@ export default function StatsAndSettings({
   mode,
   setMode,
   printTime,
+  wpm,
+  accuracy,
 }: StatsAndSettingsProps) {
   return (
     <>
@@ -22,7 +26,7 @@ export default function StatsAndSettings({
           <div className="statistics-element">
             {/* WPM */}
             <p className="stats-settings-label">WPM:</p>
-            <span id="current-wpm"> 100 </span>
+            <span id="current-wpm"> {wpm} </span>
           </div>
 
           <div className="vertical-line"></div>
@@ -30,7 +34,7 @@ export default function StatsAndSettings({
           <div className="statistics-element">
             {/* Accuracy */}
             <p className="stats-settings-label">Accuracy:</p>
-            <span id="accuracy"> 90% </span>
+            <span id="accuracy"> {accuracy}% </span>
           </div>
 
           <div className="vertical-line"></div>

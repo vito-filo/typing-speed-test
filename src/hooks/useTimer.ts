@@ -4,7 +4,9 @@ type TimerInterface = {
   startTime: () => void;
   stopTime: () => void;
   printTime: () => string;
+  resetTime: () => void;
   isExpired: boolean;
+  totalSeconds: number;
 };
 
 function useBaseTimer() {
@@ -24,6 +26,7 @@ function useBaseTimer() {
 
   const startTime = useCallback(() => {
     if (timerRef.current != null) return; // timer is already running
+    setTotalSeconds(0); // reset time
 
     timerRef.current = setInterval(() => {
       setTotalSeconds((s) => s + 1);
@@ -34,15 +37,19 @@ function useBaseTimer() {
     if (timerRef.current != null) {
       clearInterval(timerRef.current);
       timerRef.current = null;
-      setTotalSeconds(0);
     }
   }, []);
 
-  return { totalSeconds, timerRef, startTime, stopTime, isExpired };
+  function resetTime() {
+    setTotalSeconds(0);
+  }
+
+  return { totalSeconds, timerRef, startTime, stopTime, isExpired, resetTime };
 }
 
 export function useStopwatch(): TimerInterface {
-  const { totalSeconds, startTime, stopTime, isExpired } = useBaseTimer();
+  const { totalSeconds, startTime, stopTime, isExpired, resetTime } =
+    useBaseTimer();
 
   function printTime() {
     const seconds = totalSeconds % 60;
@@ -54,11 +61,11 @@ export function useStopwatch(): TimerInterface {
     else return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
-  return { startTime, stopTime, printTime, isExpired };
+  return { startTime, stopTime, printTime, isExpired, totalSeconds, resetTime };
 }
 
 export function useCountdown(targetSeconds = 60): TimerInterface {
-  const { totalSeconds, startTime, stopTime } = useBaseTimer();
+  const { totalSeconds, startTime, stopTime, resetTime } = useBaseTimer();
   const isExpired = totalSeconds >= targetSeconds;
 
   function printTime() {
@@ -77,5 +84,5 @@ export function useCountdown(targetSeconds = 60): TimerInterface {
     }
   }, [stopTime, isExpired]);
 
-  return { startTime, stopTime, printTime, isExpired };
+  return { startTime, stopTime, printTime, isExpired, totalSeconds, resetTime };
 }

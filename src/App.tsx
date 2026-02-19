@@ -13,6 +13,7 @@ import type {
 } from "./types";
 import { loadPassages, getRandomPassage } from "./utils/loadData";
 import { useStopwatch, useCountdown } from "./hooks/useTimer";
+import { useStatistics } from "./hooks/useStatistics";
 
 function App() {
   const [passageObj, setPassageObj] = useState<PassageObj | null>(null);
@@ -23,6 +24,7 @@ function App() {
   const countdown = useCountdown();
 
   const timer = mode === "passage" ? stopwatch : countdown;
+  const statistics = useStatistics(timer.totalSeconds);
 
   useEffect(() => {
     loadPassages()
@@ -34,6 +36,8 @@ function App() {
 
   function restartGame() {
     setRound((r) => r + 1);
+    timer.resetTime();
+    statistics.resetStats();
   }
 
   function setDifficultyCustom(event: StatsAndSettingsEvent) {
@@ -65,6 +69,8 @@ function App() {
         setDifficulty={setDifficultyCustom}
         setMode={setModeCustom}
         printTime={timer.printTime}
+        wpm={statistics.wpm}
+        accuracy={statistics.accuracy}
       />
       <PassageArea
         key={passage?.id || "0"}
@@ -72,6 +78,8 @@ function App() {
         startTime={timer.startTime}
         stopTime={timer.stopTime}
         isExpired={timer.isExpired}
+        calculateWPM={statistics.calculateWPM}
+        calculateAccuracy={statistics.calculateAccuracy}
       />
       <RestartButton restartGame={restartGame} />
     </>
