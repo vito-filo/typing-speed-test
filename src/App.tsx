@@ -43,7 +43,7 @@ function App() {
   const countdown = useCountdown();
   const timer = mode === "passage" ? stopwatch : countdown;
   const statistics = useStatistics(timer.totalSeconds);
-  const { bestScore } = useLocalStorage();
+  const { bestScore, setNewBestScore } = useLocalStorage();
 
   useEffect(() => {
     loadPassages()
@@ -76,20 +76,20 @@ function App() {
   function onGameover(score: FinalScore) {
     setScore(score);
     if (!bestScore) {
-      //Baseline!
+      // Baseline screen
       setIsGameOver({ flag: true, type: "baseline" });
-      // Save new score
+      setNewBestScore(score); // Save new score
       return;
     }
 
     if (score.wpm > bestScore.wpm) {
-      // New Record
+      // New Record screen
       setIsGameOver({ flag: true, type: "record" });
-      //Save new Score
+      setNewBestScore(score); // Save new score
       return;
     }
 
-    // Completed
+    // Completed screen
     setIsGameOver({ flag: true, type: "completed" });
     return;
   }
@@ -113,7 +113,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header bestWPM={bestScore?.wpm} />
       {isGameOver.flag ? (
         renderGameOverSection()
       ) : (

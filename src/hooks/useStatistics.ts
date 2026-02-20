@@ -10,6 +10,7 @@ export function useStatistics(elapsedSeconds: number) {
       index / 5 / (elapsedMinutes > 0 ? elapsedMinutes : 1),
     );
     setWpm(wordsPerMinute);
+    return wordsPerMinute;
   }
 
   function calculateAccuracy(correctChars: number, incorrectChars: number) {
@@ -17,6 +18,7 @@ export function useStatistics(elapsedSeconds: number) {
     const accuracy =
       totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 0;
     setAccuracy(accuracy);
+    return accuracy;
   }
 
   function resetStats() {

@@ -1,7 +1,7 @@
 import logoSmall from "../assets/images/logo-small.svg";
 import personalBestLogo from "../assets/images/icon-personal-best.svg";
 
-export default function Header() {
+export default function Header({ bestWPM }: { bestWPM: number | undefined }) {
   return (
     <div id="header">
       <div id="app-branding">
@@ -16,7 +16,7 @@ export default function Header() {
         <p>
           <span id="best-label-short">Best:</span>
           <span id="best-label-full">Personal best:</span>
-          <span id="best-wpm">100 WPM</span>
+          <span id="best-wpm">{bestWPM || 0} WPM</span>
         </p>
       </div>
     </div>

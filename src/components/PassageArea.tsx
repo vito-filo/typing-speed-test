@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { CharacterState, Passage } from "../types";
+import type { CharacterState, Passage, FinalScore } from "../types";
 
 export default function PassageArea({
   passage,
@@ -8,13 +8,15 @@ export default function PassageArea({
   isExpired,
   calculateWPM,
   calculateAccuracy,
+  onGameover,
 }: {
   passage: Passage | null;
   startTime: () => void;
   stopTime: () => void;
   isExpired: boolean;
-  calculateWPM: (index: number) => void;
-  calculateAccuracy: (correctChars: number, incorrectChars: number) => void;
+  calculateWPM: (index: number) => number;
+  calculateAccuracy: (correctChars: number, incorrectChars: number) => number;
+  onGameover: (score: FinalScore) => void;
 }) {
   const [isStartVisible, setIsStartVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -72,9 +74,9 @@ export default function PassageArea({
     // passage terminated
     if (nextIndex >= passageArray.length) {
       stopTime();
-      calculateWPM(nextIndex);
-      calculateAccuracy(correctChars, incorrectChars);
-      alert("Finish!!");
+      const wpm = calculateWPM(nextIndex);
+      const accuracy = calculateAccuracy(correctChars, incorrectChars);
+      onGameover({ wpm, accuracy, correctChars, incorrectChars });
     }
   }
 
