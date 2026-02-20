@@ -6,9 +6,9 @@ export default function RestartButton({
   restartGame: () => void;
 }) {
   return (
-    <div id="restart-button" onClick={restartGame}>
+    <div className="restart-button" onClick={restartGame}>
       <p>Restart Test</p>
-      <img id="restart-icon" src={iconRestart} />
+      <img src={iconRestart} />
     </div>
   );
 }

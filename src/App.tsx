@@ -3,6 +3,10 @@ import StatsAndSettings from "./components/StatsAndSettings";
 import PassageArea from "./components/PassageArea";
 import RestartButton from "./components/RestartButton";
 
+import Baseline from "./components/Baseline";
+import Complete from "./components/Complete";
+import NewRecord from "./components/NewRecord";
+
 import "./App.css";
 import { useEffect, useMemo, useState } from "react";
 import type {
@@ -10,21 +14,36 @@ import type {
   Difficulty,
   Mode,
   StatsAndSettingsEvent,
+  FinalScore,
 } from "./types";
 import { loadPassages, getRandomPassage } from "./utils/loadData";
 import { useStopwatch, useCountdown } from "./hooks/useTimer";
 import { useStatistics } from "./hooks/useStatistics";
+import { useLocalStorage } from "./hooks/useStorage";
 
 function App() {
+  // States
   const [passageObj, setPassageObj] = useState<PassageObj | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [mode, setMode] = useState<Mode>("passage");
   const [round, setRound] = useState(0);
+  const [isGameOver, setIsGameOver] = useState<{
+    flag: boolean;
+    type: "baseline" | "completed" | "record";
+  }>({ flag: false, type: "completed" });
+  const [score, setScore] = useState<FinalScore>({
+    wpm: 0,
+    accuracy: 0,
+    correctChars: 0,
+    incorrectChars: 0,
+  });
+
+  // Hooks
   const stopwatch = useStopwatch();
   const countdown = useCountdown();
-
   const timer = mode === "passage" ? stopwatch : countdown;
   const statistics = useStatistics(timer.totalSeconds);
+  const { bestScore } = useLocalStorage();
 
   useEffect(() => {
     loadPassages()
@@ -54,34 +73,73 @@ function App() {
     restartGame();
   }
 
+  function onGameover(score: FinalScore) {
+    setScore(score);
+    if (!bestScore) {
+      //Baseline!
+      setIsGameOver({ flag: true, type: "baseline" });
+      // Save new score
+      return;
+    }
+
+    if (score.wpm > bestScore.wpm) {
+      // New Record
+      setIsGameOver({ flag: true, type: "record" });
+      //Save new Score
+      return;
+    }
+
+    // Completed
+    setIsGameOver({ flag: true, type: "completed" });
+    return;
+  }
+
   const passage = useMemo(() => {
     if (!passageObj) return null;
     const newPassage = getRandomPassage(passageObj, difficulty, round);
     return newPassage;
   }, [passageObj, difficulty, round]);
 
+  function renderGameOverSection() {
+    switch (isGameOver.type) {
+      case "baseline":
+        return <Baseline score={score} />;
+      case "record":
+        return <NewRecord score={score} />;
+      case "completed":
+        return <Complete score={score} />;
+    }
+  }
+
   return (
     <>
       <Header />
-      <StatsAndSettings
-        difficulty={difficulty}
-        mode={mode}
-        setDifficulty={setDifficultyCustom}
-        setMode={setModeCustom}
-        printTime={timer.printTime}
-        wpm={statistics.wpm}
-        accuracy={statistics.accuracy}
-      />
-      <PassageArea
-        key={passage?.id || "0"}
-        passage={passage}
-        startTime={timer.startTime}
-        stopTime={timer.stopTime}
-        isExpired={timer.isExpired}
-        calculateWPM={statistics.calculateWPM}
-        calculateAccuracy={statistics.calculateAccuracy}
-      />
-      <RestartButton restartGame={restartGame} />
+      {isGameOver.flag ? (
+        renderGameOverSection()
+      ) : (
+        <>
+          <StatsAndSettings
+            difficulty={difficulty}
+            mode={mode}
+            setDifficulty={setDifficultyCustom}
+            setMode={setModeCustom}
+            printTime={timer.printTime}
+            wpm={statistics.wpm}
+            accuracy={statistics.accuracy}
+          />
+          <PassageArea
+            key={passage?.id || "0"}
+            passage={passage}
+            startTime={timer.startTime}
+            stopTime={timer.stopTime}
+            isExpired={timer.isExpired}
+            calculateWPM={statistics.calculateWPM}
+            calculateAccuracy={statistics.calculateAccuracy}
+            onGameover={onGameover}
+          />
+          <RestartButton restartGame={restartGame} />
+        </>
+      )}
     </>
   );
 }

@@ -34,7 +34,7 @@ export default function StatsAndSettings({
           <div className="statistics-element">
             {/* Accuracy */}
             <p className="stats-settings-label">Accuracy:</p>
-            <span id="accuracy"> {accuracy}% </span>
+            <span className="accuracy-score"> {accuracy}% </span>
           </div>
 
           <div className="vertical-line"></div>

@@ -16,3 +16,10 @@ export type PassageObj = Record<Difficulty, Passage[]>;
 export type StatsAndSettingsEvent =
   | React.MouseEvent<HTMLButtonElement>
   | React.ChangeEvent<HTMLSelectElement>;
+
+export type FinalScore = {
+  wpm: number;
+  accuracy: number;
+  correctChars: number;
+  incorrectChars: number;
+};

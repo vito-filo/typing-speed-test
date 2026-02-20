@@ -1,0 +1,23 @@
+.celebrationLayer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* don't block clicks */
+  z-index: 0;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-300px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(-100px) rotate(300deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  animation: float 3s ease-out infinite;
+}
