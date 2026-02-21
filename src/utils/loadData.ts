@@ -2,7 +2,7 @@ import type { PassageObj, Difficulty } from "../types";
 
 export async function loadPassages() {
   try {
-    const response = await fetch("data.json");
+    const response = await fetch(`${import.meta.env.BASE_URL}data.json`);
     const passages = (await response.json()) as PassageObj;
 
     return passages;

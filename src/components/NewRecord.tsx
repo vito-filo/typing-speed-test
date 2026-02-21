@@ -4,7 +4,13 @@ import newRecordIcon from "../assets/images/icon-new-pb.svg";
 import styles from "../styles/components/complete.module.css";
 import type { FinalScore } from "../types";
 
-export default function NewRecord({ score }: { score: FinalScore }) {
+export default function NewRecord({
+  score,
+  onRestartGame,
+}: {
+  score: FinalScore;
+  onRestartGame: (score: FinalScore) => void;
+}) {
   return (
     <GameOver
       title={"High Score Smashed!"}
@@ -16,6 +22,9 @@ export default function NewRecord({ score }: { score: FinalScore }) {
       buttonText={"Go Again"}
       animation={<ConfettiAnimation />}
       icon={<img src={newRecordIcon} className={styles.newRecordIcon} />}
+      onRestartGame={() => {
+        onRestartGame(score);
+      }}
     />
   );
 }

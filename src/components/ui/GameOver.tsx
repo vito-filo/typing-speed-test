@@ -14,6 +14,7 @@ type GameOverProps = {
   buttonText: string;
   animation: React.JSX.Element;
   icon: React.JSX.Element;
+  onRestartGame: () => void;
 };
 
 export default function GameOver({
@@ -26,6 +27,7 @@ export default function GameOver({
   buttonText,
   animation,
   icon,
+  onRestartGame,
 }: GameOverProps) {
   return (
     <div className={styles.container}>
@@ -50,7 +52,10 @@ export default function GameOver({
           {incorrectChars}
         </span>
       </div>
-      <div className={`restart-button ${styles.restartButton}`}>
+      <div
+        className={`restart-button ${styles.restartButton}`}
+        onClick={onRestartGame}
+      >
         <p>{buttonText}</p>
         <img src={restartIcon} className={`${styles.restartIcon}`} />
       </div>

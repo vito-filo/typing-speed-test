@@ -4,7 +4,13 @@ import completedIcon from "../assets/images/icon-completed.svg";
 import styles from "../styles/components/complete.module.css";
 import type { FinalScore } from "../types";
 
-export default function Complete({ score }: { score: FinalScore }) {
+export default function Complete({
+  score,
+  onRestartGame,
+}: {
+  score: FinalScore;
+  onRestartGame: (score: FinalScore) => void;
+}) {
   return (
     <>
       <GameOver
@@ -17,6 +23,9 @@ export default function Complete({ score }: { score: FinalScore }) {
         buttonText={"Go Again"}
         animation={<StarsAnimation />}
         icon={<img src={completedIcon} className={styles.completedIcon} />}
+        onRestartGame={() => {
+          onRestartGame(score);
+        }}
       />
     </>
   );

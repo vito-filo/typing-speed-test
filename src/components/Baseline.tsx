@@ -4,7 +4,13 @@ import completedIcon from "../assets/images/icon-completed.svg";
 import styles from "../styles/components/complete.module.css";
 import type { FinalScore } from "../types";
 
-export default function Baseline({ score }: { score: FinalScore }) {
+export default function Baseline({
+  score,
+  onRestartGame,
+}: {
+  score: FinalScore;
+  onRestartGame: (score: FinalScore) => void;
+}) {
   return (
     <GameOver
       title={"Baseline Established!"}
@@ -18,6 +24,9 @@ export default function Baseline({ score }: { score: FinalScore }) {
       buttonText={"Beat This Score"}
       animation={<StarsAnimation />}
       icon={<img src={completedIcon} className={styles.completedIcon} />}
+      onRestartGame={() => {
+        onRestartGame(score);
+      }}
     />
   );
 }

@@ -57,6 +57,7 @@ function App() {
     setRound((r) => r + 1);
     timer.resetTime();
     statistics.resetStats();
+    setIsGameOver({ flag: false, type: "baseline" });
   }
 
   function setDifficultyCustom(event: StatsAndSettingsEvent) {
@@ -104,11 +105,11 @@ function App() {
   function renderGameOverSection() {
     switch (isGameOver.type) {
       case "baseline":
-        return <Baseline score={score} />;
+        return <Baseline score={score} onRestartGame={restartGame} />;
       case "record":
-        return <NewRecord score={score} />;
+        return <NewRecord score={score} onRestartGame={restartGame} />;
       case "completed":
-        return <Complete score={score} />;
+        return <Complete score={score} onRestartGame={restartGame} />;
     }
   }
 
