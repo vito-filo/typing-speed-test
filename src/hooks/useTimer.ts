@@ -80,7 +80,6 @@ export function useCountdown(targetSeconds = 60): TimerInterface {
   useEffect(() => {
     if (isExpired) {
       stopTime();
-      alert("Finish!!"); // TODO remove from here
     }
   }, [stopTime, isExpired]);
 

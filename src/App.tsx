@@ -82,6 +82,7 @@ function App() {
       return;
     }
 
+    // TODO compara also with accuracy and time?
     if (score.wpm > bestScore.wpm) {
       // New Record screen
       setIsGameOver({ flag: true, type: "record" });

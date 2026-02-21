@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CharacterState, Passage, FinalScore } from "../types";
 
 export default function PassageArea({
@@ -31,12 +31,39 @@ export default function PassageArea({
     return [];
   });
 
+  const correctChars = useMemo(
+    () => passageArray.filter((char) => char.status === "correct").length,
+    [passageArray],
+  );
+
+  const incorrectChars = useMemo(
+    () => passageArray.filter((char) => char.status === "incorrect").length,
+    [passageArray],
+  );
+
   const passageContainerRef = useRef<HTMLDivElement>(null);
 
   function handleStart() {
     setIsStartVisible(false); // hide the start section
     passageContainerRef.current?.focus(); // user can start typing
   }
+
+  // Trigger gameover function
+  useEffect(() => {
+    if (isExpired) {
+      const wpm = calculateWPM(currentIndex);
+      const accuracy = calculateAccuracy(correctChars, incorrectChars);
+      onGameover({ wpm, accuracy, correctChars, incorrectChars });
+    }
+  }, [
+    isExpired,
+    currentIndex,
+    correctChars,
+    incorrectChars,
+    calculateWPM,
+    calculateAccuracy,
+    onGameover,
+  ]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key.length > 1) return; // skip special chars (eg "Shift")
@@ -54,13 +81,6 @@ export default function PassageArea({
     } else {
       newCharacters[currentIndex].status = "incorrect";
     }
-
-    const correctChars = newCharacters.filter(
-      (char) => char.status === "correct",
-    ).length;
-    const incorrectChars = newCharacters.filter(
-      (char) => char.status === "incorrect",
-    ).length;
 
     // calculate statistics after each typed word
     if (nextIndex % 5 === 0) {
