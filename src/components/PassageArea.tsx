@@ -100,6 +100,83 @@ export default function PassageArea({
     }
   }
 
+  /**
+   * Renders the passage with character-level styling and cursor positioning.
+   * 
+   * Processes the passage array into React nodes, grouping non-whitespace characters
+   * into word spans and individual spans for whitespace. Each character receives a
+   * className based on its status and whether it's at the current cursor position.
+   * 
+   * This structure allows to treat every character as single <span> but group words together
+   * so the browser knows how to go new line correctly.
+   * 
+   * for example: 
+  [
+    <span key="word-0" className="word">
+      <span key="c-0" className="correct">H</span>
+      <span key="c-1" className="correct cursor">e</span>
+      <span key="c-2" className="untyped">l</span>
+      <span key="c-3" className="untyped">l</span>
+      <span key="c-4" className="untyped">o</span>
+    </span>,
+    <span key="ws-5" className="untyped"> </span>,
+    <span key="word-6" className="word">
+      <span key="c-6" className="incorrect">w</span>
+      <span key="c-7" className="untyped">o</span>
+      <span key="c-8" className="untyped">r</span>
+      <span key="c-9" className="untyped">l</span>
+      <span key="c-10" className="untyped">d</span>
+    </span>
+  ]
+   */
+  const renderedPassage = useMemo(() => {
+    if (!passageArray.length) return null;
+
+    const nodes: React.ReactNode[] = [];
+
+    const getCharClassName = (
+      status: CharacterState["status"],
+      index: number,
+    ) => `${status}${index === currentIndex ? " cursor" : ""}`;
+
+    let i = 0;
+    while (i < passageArray.length) {
+      const isWhitespace = /\s/.test(passageArray[i].char);
+
+      if (isWhitespace) {
+        const c = passageArray[i];
+        nodes.push(
+          <span key={`ws-${i}`} className={getCharClassName(c.status, i)}>
+            {c.char}
+          </span>,
+        );
+        i += 1;
+        continue;
+      }
+
+      const wordStart = i;
+      const wordChars: React.ReactNode[] = [];
+
+      while (i < passageArray.length && !/\s/.test(passageArray[i].char)) {
+        const c = passageArray[i];
+        wordChars.push(
+          <span key={`c-${i}`} className={getCharClassName(c.status, i)}>
+            {c.char}
+          </span>,
+        );
+        i += 1;
+      }
+
+      nodes.push(
+        <span key={`word-${wordStart}`} className="word">
+          {wordChars}
+        </span>,
+      );
+    }
+
+    return nodes;
+  }, [passageArray, currentIndex]);
+
   return (
     <>
       <div
@@ -110,15 +187,7 @@ export default function PassageArea({
         onKeyDown={handleKeyDown}
         onClick={handleStart}
       >
-        {passageArray ? (
-          passageArray.map((char, index) => (
-            <span key={index} className={char.status}>
-              {char.char}
-            </span>
-          ))
-        ) : (
-          <p>loading...</p>
-        )}
+        {renderedPassage ?? <p>loading...</p>}
       </div>
       {isStartVisible && (
         <div id="start-section">
