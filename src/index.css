@@ -390,7 +390,7 @@ hr {
     border-color: var(--blue-600);
   }
 
-  #restart-button {
-    width: 20%;
+  .restart-button {
+    padding: 15px 20px;
   }
 }
