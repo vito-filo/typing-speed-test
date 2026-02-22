@@ -8,7 +8,7 @@ import Complete from "./components/Complete";
 import NewRecord from "./components/NewRecord";
 
 import "./App.css";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type {
   PassageObj,
   Difficulty,
@@ -42,7 +42,11 @@ function App() {
   const stopwatch = useStopwatch();
   const countdown = useCountdown();
   const timer = mode === "passage" ? stopwatch : countdown;
-  const statistics = useStatistics(timer.totalSeconds);
+  const { startTime, stopTime, printTime, isExpired, totalSeconds, resetTime } =
+    timer;
+
+  const { wpm, accuracy, calculateWPM, calculateAccuracy, resetStats } =
+    useStatistics(totalSeconds);
   const { bestScore, setNewBestScore } = useLocalStorage();
 
   useEffect(() => {
@@ -53,24 +57,24 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  function restartGame() {
+  const restartGame = useCallback(() => {
     setRound((r) => r + 1);
-    timer.resetTime();
-    statistics.resetStats();
+    resetTime();
+    resetStats();
     setIsGameOver({ flag: false, type: "baseline" });
-  }
+  }, [resetTime, resetStats]);
 
   function setDifficultyCustom(event: StatsAndSettingsEvent) {
     const newDifficulty = event.currentTarget.value as Difficulty;
     setDifficulty(newDifficulty);
-    timer.stopTime();
+    stopTime();
     restartGame();
   }
 
   function setModeCustom(event: StatsAndSettingsEvent) {
     const mode = event.currentTarget.value as Mode;
     setMode(mode);
-    timer.stopTime();
+    stopTime();
     restartGame();
   }
 
@@ -125,18 +129,18 @@ function App() {
             mode={mode}
             setDifficulty={setDifficultyCustom}
             setMode={setModeCustom}
-            printTime={timer.printTime}
-            wpm={statistics.wpm}
-            accuracy={statistics.accuracy}
+            printTime={printTime}
+            wpm={wpm}
+            accuracy={accuracy}
           />
           <PassageArea
             key={passage?.id || "0"}
             passage={passage}
-            startTime={timer.startTime}
-            stopTime={timer.stopTime}
-            isExpired={timer.isExpired}
-            calculateWPM={statistics.calculateWPM}
-            calculateAccuracy={statistics.calculateAccuracy}
+            startTime={startTime}
+            stopTime={stopTime}
+            isExpired={isExpired}
+            calculateWPM={calculateWPM}
+            calculateAccuracy={calculateAccuracy}
             onGameover={onGameover}
           />
           <RestartButton restartGame={restartGame} />

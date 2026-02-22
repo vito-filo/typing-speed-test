@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export function useStatistics(elapsedSeconds: number) {
   const [wpm, setWpm] = useState(0);
@@ -21,10 +21,10 @@ export function useStatistics(elapsedSeconds: number) {
     return accuracy;
   }
 
-  function resetStats() {
+  const resetStats = useCallback(() => {
     setWpm(0);
     setAccuracy(0);
-  }
+  }, []);
 
   return { wpm, accuracy, calculateWPM, calculateAccuracy, resetStats };
 }

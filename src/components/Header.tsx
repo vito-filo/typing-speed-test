@@ -1,7 +1,12 @@
 import logoSmall from "../assets/images/logo-small.svg";
 import personalBestLogo from "../assets/images/icon-personal-best.svg";
+import { memo } from "react";
 
-export default function Header({ bestWPM }: { bestWPM: number | undefined }) {
+const Header = memo(function Header({
+  bestWPM,
+}: {
+  bestWPM: number | undefined;
+}) {
   return (
     <div id="header">
       <div id="app-branding">
@@ -21,4 +26,6 @@ export default function Header({ bestWPM }: { bestWPM: number | undefined }) {
       </div>
     </div>
   );
-}
+});
+
+export default Header;

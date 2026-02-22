@@ -40,9 +40,9 @@ function useBaseTimer() {
     }
   }, []);
 
-  function resetTime() {
+  const resetTime = useCallback(() => {
     setTotalSeconds(0);
-  }
+  }, [setTotalSeconds]);
 
   return { totalSeconds, timerRef, startTime, stopTime, isExpired, resetTime };
 }

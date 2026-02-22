@@ -1,6 +1,7 @@
 import iconRestart from "../assets/images/icon-restart.svg";
+import { memo } from "react";
 
-export default function RestartButton({
+const RestartButton = memo(function RestartButton({
   restartGame,
 }: {
   restartGame: () => void;
@@ -11,4 +12,6 @@ export default function RestartButton({
       <img src={iconRestart} />
     </div>
   );
-}
+});
+
+export default RestartButton;
